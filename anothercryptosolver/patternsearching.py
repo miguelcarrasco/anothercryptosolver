@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from wordmodels import LetterPattern
 
 
 class PatternFinder:
-    def __init__(self, wordlistdb):
-        self.wordlistdb = wordlistdb
-        self.engine = create_engine('sqlite:///' + self.wordlistdb,
-                                    echo=False, encoding='utf-8', convert_unicode=True)
+    def __init__(self, engine):
+        self.engine = engine
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
 
@@ -26,7 +23,6 @@ class PatternFinder:
             pattern = LetterPattern.generate_pattern(original_word)
             letter_pattern = self.session.query(LetterPattern).filter(LetterPattern.pattern == pattern).first()
             word_pattern_dict[original_word] = letter_pattern
-            # print 'pattern: ' + pattern + ' size: ' + str(len(letter_pattern.words))
         return word_pattern_dict
 
     def __unscramble(self, word_pattern_dict, substitution_dict, depth, ciphered_message, maximum_depth):

@@ -3,6 +3,8 @@
 
 import sys
 
+from sqlalchemy import create_engine
+
 from patternsearching import PatternFinder
 
 
@@ -25,5 +27,8 @@ if __name__ == "__main__":
     for line in sys.stdin.readlines():
         ciphered_message += line
 
-    finder = PatternFinder(wordlistdb=args[0])
+    wordlistdb = args[0]
+    engine = create_engine('sqlite:///' + wordlistdb,
+                           echo=False, encoding='utf-8', convert_unicode=True)
+    finder = PatternFinder(engine)
     finder.find_solutions(ciphered_message.rstrip().decode('utf-8'))
