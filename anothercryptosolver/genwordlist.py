@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from sqlalchemy import create_engine
 
 from wordlistdb_management import WordListDBCreator
 
@@ -16,7 +17,9 @@ def print_instructions(executable):
 
 
 def create_db_from_stdin(wordlistdb):
-    dbcreator = WordListDBCreator(wordlistdb)
+    engine = create_engine('sqlite:///' + wordlistdb,
+                           echo=False, encoding='utf-8', convert_unicode=True)
+    dbcreator = WordListDBCreator(engine)
     dbcreator.max_words_added = 50
     while True:
         try:

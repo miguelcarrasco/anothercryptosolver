@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from wordmodels import Base, Word, LetterPattern
 
 
 class WordListDBCreator:
-    def __init__(self, wordlistdb):
-        self.wordlistdb = wordlistdb
-        self.engine = create_engine('sqlite:///' + self.wordlistdb,
-                                    echo=False, encoding='utf-8', convert_unicode=True)
+    def __init__(self, engine):
+        self.engine = engine
         Base.metadata.create_all(self.engine)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
